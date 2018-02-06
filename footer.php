@@ -25,58 +25,22 @@
  * Domain Path:       /languages
  */
 
-// If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-	die;
+function piffek_remove_dashboard(){
+    remove_meta_box('dashboard_right_now', 'dashboard', 'normal');
 }
 
-/**
- * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
- */
-define( 'PLUGIN_NAME_VERSION', '1.0.0' );
+add_action('wp_dashboard_setup', 'piffek_remove_dashboard');
 
-/**
- * The code that runs during plugin activation.
- * This action is documented in includes/class-footer-activator.php
- */
-function activate_footer() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-footer-activator.php';
-	Footer_Activator::activate();
+function piffek_add_google_link(){
+    global $wp_admin_bar;
+
+    $piece_of_menu = array(
+        'id' => 'piffek_google',
+        'title' => 'Piffko google',
+        'href' => 'przenosnareklama.pl'
+    );
+
+    $wp_admin_bar->add_menu($piece_of_menu);
 }
 
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in includes/class-footer-deactivator.php
- */
-function deactivate_footer() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-footer-deactivator.php';
-	Footer_Deactivator::deactivate();
-}
-
-register_activation_hook( __FILE__, 'activate_footer' );
-register_deactivation_hook( __FILE__, 'deactivate_footer' );
-
-/**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
- */
-require plugin_dir_path( __FILE__ ) . 'includes/class-footer.php';
-
-/**
- * Begins execution of the plugin.
- *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
- *
- * @since    1.0.0
- */
-function run_footer() {
-
-	$plugin = new Footer();
-	$plugin->run();
-
-}
-run_footer();
+add_action('wp_before_admin_bar_render', 'piffek_add_google_link');
